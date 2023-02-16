@@ -78,5 +78,23 @@ app.post('/messages/save', async (req, res) => {
   }
 })
 
+app.get('/api/about', async (req,res)=>{
+  try{
+    const data = {
+      content: {
+        paragraphs: ["Hi, my name is Brian Lee.","I am a senior majoring in Computer Science (suprise!) I have a strong passion for web development, and look forward to working in front-end soon, hopefully full-stack in the near future","The first 'Hello, World' in an intro Python course was fun enough to get me into programming, but now I feel relieved that I know much more than that","Outside of computers, I am a huge fan of soccer. If there are any Cityzens out there, glad to meet you!"]
+      },
+      image: "myphoto.jpg" 
+    }
+    console.log(data)
+    res.json(data)
+  }
+  catch (err){
+    res.status(400).json({
+      error: err,
+      status: 'failed to retrieve content'
+    })
+  }
+})
 // export the express app we created to make it available to other modules
 module.exports = app // CommonJS export style!

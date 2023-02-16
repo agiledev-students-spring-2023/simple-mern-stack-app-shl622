@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
 import myphoto from './myphoto.jpg'
+import { useEffect,useState,lazy } from 'react'
 import './Home.css'
+
 
 /**
  * A React component that represents the Home page of the app.
@@ -8,16 +9,33 @@ import './Home.css'
  * @returns The contents of this component, in JSX form.
  */
 const About = props => {
+  const [content, setContent] = useState({paragraphs:[]})
+  const [image, setImage] = useState("")
+  console.log("content",content)
+  console.log("image", image)
+  useEffect(()=>{
+    const getData = async () =>{
+      const res = await fetch('http://localhost:5002/api/about',{
+        method: 'GET'
+      })
+      const data = await res.json()
+      console.log(data)
+      setContent({...data.content})
+      const imageImport = await require(`./${data.image}`)
+      setImage(imageImport)
+    }
+    getData()
+  },[])
+  const renderP = () => {
+    return content.paragraphs.map((paragraph,index)=>{
+      return <p key={index}>{paragraph}</p>
+    })
+  }
   return (
     <>
-      <h1>Hi, I'm Brian</h1>
-      <img src={myphoto}/>
-      <p>I am a senior majoring in Computer Science (suprise!)</p>
-      <p>I have a strong passion for web development, and look forward to working in front-end soon, hopefully full-stack in the near future.</p>
-      <p>The first "Hello, World" in an intro Python course was fun enough to get me in this field, but now I feel relieved that I know much more than that. </p>
-      <p>Outside of computers, I am a huge fan of soccer (but really <em>football</em>).
-      <br/>
-      If there are any Cityzens out there, glad to meet you!</p>
+    {/* if image is truthy */}
+    {image&&<img src={image}/>}
+    {renderP()}
     </>
   )
 }
